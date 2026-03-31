@@ -13,7 +13,8 @@ return function(config)
     -- URLs do SEU repositório público
     local CONFIG_URL      = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Config.json"
     local LIB_CONFIG_URL  = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Lib/Config.json"
-    local LIB_SRC_URL     = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Lib/Src.lua"
+    -- URL da Lib via API protegida (GitHub escondido no servidor)
+    local LIB_SRC_URL     = "https://irontech-system.vercel.app/api/load"
 
 --// =========================================
 --//   CONFIG INTERNA — Links encurtados + Keys
