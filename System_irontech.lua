@@ -39,7 +39,7 @@ return function(config)
     local Players     = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
 
-    -- Ponto roxo IronTech (watermark)
+    -- Ponto roxo IronTech (watermark) — pequeno, pulsante, estilo radar
     local function spawnIronTechDot()
         pcall(function()
             local sg = Instance.new("ScreenGui")
@@ -49,24 +49,62 @@ return function(config)
             sg.IgnoreGuiInset   = true
             sg.Parent           = game:GetService("CoreGui")
 
+            -- Ponto central
             local dot = Instance.new("Frame")
-            dot.Size            = UDim2.new(0, 8, 0, 8)
-            dot.Position        = UDim2.new(0, 10, 0, 10)
+            dot.Size             = UDim2.new(0, 5, 0, 5)
+            dot.Position         = UDim2.new(0, 8, 0, 8)
             dot.BackgroundColor3 = Color3.fromRGB(120, 0, 240)
-            dot.BorderSizePixel = 0
-            dot.Parent          = sg
+            dot.BorderSizePixel  = 0
+            dot.ZIndex           = 10
+            dot.Parent           = sg
 
-            local corner = Instance.new("UICorner")
-            corner.CornerRadius = UDim.new(1, 0)
-            corner.Parent       = dot
+            local c = Instance.new("UICorner")
+            c.CornerRadius = UDim.new(1, 0)
+            c.Parent       = dot
 
-            -- Pulso sutil
+            -- Função pra criar onda radar
+            local function criarOnda()
+                local wave = Instance.new("Frame")
+                wave.Size             = UDim2.new(0, 5, 0, 5)
+                wave.Position         = UDim2.new(0, 8, 0, 8)
+                wave.BackgroundColor3 = Color3.fromRGB(120, 0, 240)
+                wave.BackgroundTransparency = 0.3
+                wave.BorderSizePixel  = 0
+                wave.ZIndex           = 9
+                wave.Parent           = sg
+
+                local wc = Instance.new("UICorner")
+                wc.CornerRadius = UDim.new(1, 0)
+                wc.Parent       = wave
+
+                -- Anima a onda expandindo e sumindo
+                local ts = game:GetService("TweenService")
+                local tween = ts:Create(wave, TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size                    = UDim2.new(0, 22, 0, 22),
+                    Position                = UDim2.new(0, -1, 0, -1),
+                    BackgroundTransparency  = 1,
+                })
+                tween:Play()
+                tween.Completed:Connect(function()
+                    wave:Destroy()
+                end)
+            end
+
+            -- Pulso do ponto central
             task.spawn(function()
+                local ts = game:GetService("TweenService")
                 while dot and dot.Parent do
-                    local t = tick()
-                    local alpha = (math.sin(t * 2) + 1) / 2
-                    dot.BackgroundTransparency = 0.2 + alpha * 0.4
-                    task.wait(0.05)
+                    -- Onda radar
+                    criarOnda()
+                    -- Brilho do ponto
+                    ts:Create(dot, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        BackgroundColor3 = Color3.fromRGB(180, 60, 255)
+                    }):Play()
+                    task.wait(0.6)
+                    ts:Create(dot, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        BackgroundColor3 = Color3.fromRGB(80, 0, 180)
+                    }):Play()
+                    task.wait(1.2)
                 end
             end)
         end)
