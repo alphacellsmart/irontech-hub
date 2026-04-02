@@ -267,6 +267,23 @@ return function(config)
     })
     Window:RegisterFloat(Float)
 
+    -- Pulso roxo no botão flutuante
+    task.spawn(function()
+        local ts = game:GetService("TweenService")
+        local btn = Float and Float._btn
+        if not btn then return end
+        while btn and btn.Parent do
+            ts:Create(btn, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = Color3.fromRGB(160, 60, 255)
+            }):Play()
+            task.wait(0.8)
+            ts:Create(btn, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = Color3.fromRGB(60, 0, 140)
+            }):Play()
+            task.wait(0.8)
+        end
+    end)
+
     if CFG_SND ~= "" then
         task.spawn(function()
             local s = Instance.new("Sound")
