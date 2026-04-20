@@ -45,5 +45,8 @@
         "IRON-PREM-Z7A8B9-VIP",
         "IRON-PREM-C1D2E3-VIP",
         "IRON-PREM-F4G5H6-VIP"
+    ],
+    "UsedKeys": [
+        "IRON-PREM-A1B2C3-VIP"
     ]
 }
