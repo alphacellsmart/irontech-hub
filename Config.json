@@ -56,10 +56,12 @@
         "IRON-PREM-S1T2U3-VIP",
         "IRON-PREM-V4W5X6-VIP",
         "IRON-PREM-Y7Z8A9-VIP",
-        "IRON-PREM-B1C2D3-VIP"
+        "IRON-PREM-B1C2D3-VIP",
+        "IRON-PREM-E4F5G6-VIP"
     ],
     "TxidsEntregues": [
         "a4ca187ae7c14dfbb1bc4fc09f54a074",
-        "acf4d62ea13c48c6b6a7876f89ef0416"
+        "acf4d62ea13c48c6b6a7876f89ef0416",
+        "a71a1d7846f449a7a0cb02893a7049b0"
     ]
 }
