@@ -30,7 +30,8 @@ return function(config)
             ["https://mineurl.com/2b9604"] = "KEY-CYRS-6X-4-P-Z9M3W",
         },
         LinkExpiryTime = 43200,
-        DiscordLink    = "https://discord.gg/52pYXShjj",
+        DiscordLink    = "https://discord.gg/RCkCmkTFaf",
+        DiscordComprar = "https://discord.com/channels/1481726997452296326/1482141134938702069",
     }
 
 --// =========================================
@@ -391,8 +392,8 @@ return function(config)
     SecPremium:AddButton({
         Title    = "💬 Comprar no Discord",
         Callback = function()
-            setclipboard(INTERNAL_CONFIG.DiscordLink)
-            Notify("Link do Discord copiado!", 5, Color3.fromRGB(114,137,218))
+            setclipboard(INTERNAL_CONFIG.DiscordComprar)
+            Notify("Link copiado! Entre no Discord e vá ao canal de compras.", 5, Color3.fromRGB(114,137,218))
         end,
     })
 
