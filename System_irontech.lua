@@ -118,21 +118,6 @@ return function(config)
         end)
     end
 
-
-            task.spawn(function()
-                local ts = game:GetService("TweenService")
-                while dot and dot.Parent do
-                    criarOnda()
-                    ts:Create(dot, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(180,60,255)}):Play()
-                    task.wait(0.6)
-                    ts:Create(dot, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(80,0,180)}):Play()
-                    task.wait(1.2)
-                end
-            end)
-        end)
-    end
-
-
 --// =========================================
     local function fetchJSON(url)
         local ok, raw = pcall(function() return game:HttpGet(url, true) end)
