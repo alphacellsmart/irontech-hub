@@ -118,44 +118,6 @@ return function(config)
         end)
     end
 
---// =========================================
---//   WATERMARK
---// =========================================
-    local function spawnIronTechDot()
-        pcall(function()
-            local sg = Instance.new("ScreenGui")
-            sg.Name           = "IronTechDot"
-            sg.ResetOnSpawn   = false
-            sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-            sg.IgnoreGuiInset = true
-            sg.Parent         = game:GetService("CoreGui")
-
-            local dot = Instance.new("Frame")
-            dot.Size             = UDim2.new(0, 5, 0, 5)
-            dot.Position         = UDim2.new(0, 8, 0, 8)
-            dot.BackgroundColor3 = Color3.fromRGB(120, 0, 240)
-            dot.BorderSizePixel  = 0
-            dot.ZIndex           = 10
-            dot.Parent           = sg
-            Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-
-            local function criarOnda()
-                local wave = Instance.new("Frame")
-                wave.Size                   = UDim2.new(0, 5, 0, 5)
-                wave.Position               = UDim2.new(0, 8, 0, 8)
-                wave.BackgroundColor3       = Color3.fromRGB(120, 0, 240)
-                wave.BackgroundTransparency = 0.3
-                wave.BorderSizePixel        = 0
-                wave.ZIndex                 = 9
-                wave.Parent                 = sg
-                Instance.new("UICorner", wave).CornerRadius = UDim.new(1, 0)
-                local ts = game:GetService("TweenService")
-                local tw = ts:Create(wave, TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    Size = UDim2.new(0,22,0,22), Position = UDim2.new(0,-1,0,-1), BackgroundTransparency = 1,
-                })
-                tw:Play()
-                tw.Completed:Connect(function() wave:Destroy() end)
-            end
 
             task.spawn(function()
                 local ts = game:GetService("TweenService")
@@ -170,7 +132,6 @@ return function(config)
         end)
     end
 
-    spawnIronTechDot()
 
 --// =========================================
     local function fetchJSON(url)
