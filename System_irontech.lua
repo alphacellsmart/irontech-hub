@@ -1,5 +1,5 @@
 --// =========================================
---//   IronTech System v2.0
+--//   IronTech System v2.1
 --//   github.com/alphacellsmart/irontech-hub
 --// =========================================
 return function(config)
@@ -14,20 +14,19 @@ return function(config)
     local LIB_CONFIG_URL = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Lib/Config.json"
     local LIB_SRC_URL    = "https://irontech-system.vercel.app/api/load"
     local ANALYTICS_URL  = "https://irontech-system.vercel.app/api/analytics"
+    local SECRET_TOKEN   = "IRNTCH_SEC_7x9kQmZ2pL4nR8wY"
 
 --// =========================================
 --//   CONFIG INTERNA
 --// =========================================
     local INTERNAL_CONFIG = {
         Links = {
-            ["https://mineurl.com/1aff50"] = "KEY-CYRS-1J-9-W-C7B4X",
-            ["https://mineurl.com/132704"] = "KEY-CYRS-8H-5-K-R2N6Y",
-            ["https://mineurl.com/8dd9ca"] = "KEY-CYRS-4F-2-B-P9X8E",
-            ["https://mineurl.com/e3cc59"] = "KEY-CYRS-2X-1-H-T9M5P",
-            ["https://mineurl.com/9d9423"] = "KEY-CYRS-6B-4-R-N8W3K",
-            ["https://mineurl.com/227b23"] = "KEY-CYRS-3P-7-T-M5Q2Z",
-            ["https://mineurl.com/e167b0"] = "KEY-CYRS-7M-6-Q-L3T1N",
-            ["https://mineurl.com/2b9604"] = "KEY-CYRS-6X-4-P-Z9M3W",
+            ["https://suaads.com/wxtj1e"]    = "KEY-CYRS-K45P-YU98-78AB",
+            ["https://suaads.com/gcefwl"]    = "KEY-CYRS-RTV4-4D4R-GGK3",
+            ["https://suaads.com/ifw7t0"]    = "KEY-CYRS-VYHT-VSWV-Y7L0",
+            ["https://suaurl.com/j0th05"]    = "KEY-CYRS-ENK5-HOAS-GRYC",
+            ["https://shortmine.com/5bp0w2"] = "KEY-CYRS-AODV-YWI1-CKSM",
+            ["https://mineurl.com/g9fw43"]   = "KEY-CYRS-HOX7-WO6Z-GHQS",
         },
         LinkExpiryTime = 43200,
         DiscordLink    = "https://discord.gg/RCkCmkTFaf",
@@ -67,14 +66,14 @@ return function(config)
             local localeMap = {
                 ["pt-br"]="Brasil",["pt"]="Portugal",
                 ["en-us"]="Estados Unidos",["en-gb"]="Reino Unido",
-                ["es-es"]="Espanha",["es-mx"]="México",
-                ["fr-fr"]="França",["de-de"]="Alemanha",
-                ["it-it"]="Itália",["ru-ru"]="Rússia",
-                ["ja-jp"]="Japão",["ko-kr"]="Coreia do Sul",
-                ["zh-cn"]="China",["ar-sa"]="Arábia Saudita",
-                ["tr-tr"]="Turquia",["pl-pl"]="Polônia",
-                ["id-id"]="Indonésia",["th-th"]="Tailândia",
-                ["vi-vn"]="Vietnã",["uk-ua"]="Ucrânia",
+                ["es-es"]="Espanha",["es-mx"]="Mexico",
+                ["fr-fr"]="Franca",["de-de"]="Alemanha",
+                ["it-it"]="Italia",["ru-ru"]="Russia",
+                ["ja-jp"]="Japao",["ko-kr"]="Coreia do Sul",
+                ["zh-cn"]="China",["ar-sa"]="Arabia Saudita",
+                ["tr-tr"]="Turquia",["pl-pl"]="Polonia",
+                ["id-id"]="Indonesia",["th-th"]="Tailandia",
+                ["vi-vn"]="Vietna",["uk-ua"]="Ucrania",
             }
             return localeMap[locale:lower()] or locale
         end
@@ -99,7 +98,7 @@ return function(config)
     end
 
 --// =========================================
---//   ANALYTICS
+--//   ANALYTICS v2.1 — token secreto + request() compativel
 --// =========================================
     local function sendAnalytics(accessType)
         pcall(function()
@@ -114,7 +113,25 @@ return function(config)
                 accessType     = accessType,
                 teleportScript = buildTeleportScript(),
             })
-            game:HttpPost(ANALYTICS_URL, payload, false, "application/json")
+            local reqData = {
+                Url     = ANALYTICS_URL,
+                Method  = "POST",
+                Headers = {
+                    ["Content-Type"]      = "application/json",
+                    ["X-IronTech-Token"]  = SECRET_TOKEN,
+                },
+                Body = payload,
+            }
+            -- Tenta request() dos executors (syn, http, request) — fallback HttpPost
+            if syn and syn.request then
+                syn.request(reqData)
+            elseif http and http.request then
+                http.request(reqData)
+            elseif request then
+                request(reqData)
+            else
+                game:HttpPost(ANALYTICS_URL, payload, false, "application/json")
+            end
         end)
     end
 
@@ -256,11 +273,11 @@ return function(config)
     local SecEntrada   = TabVerificar:AddSection("Pegue uma senha para continuar", true)
 
     SecEntrada:AddButton({
-        Title    = "🔗 Gerar Link (Clique Aqui)",
+        Title    = "Gerar Link (Clique Aqui)",
         Callback = function()
             local links = {}
             for link in pairs(INTERNAL_CONFIG.Links) do table.insert(links, link) end
-            if #links == 0 then Notify("Nenhum link disponível", 3, Color3.fromRGB(255,80,80)); return end
+            if #links == 0 then Notify("Nenhum link disponivel", 3, Color3.fromRGB(255,80,80)); return end
             local randomLink = links[math.random(#links)]
             dataManager:save("Link.json", { link = randomLink, time = tick() })
             setclipboard(randomLink)
@@ -275,7 +292,7 @@ return function(config)
     })
 
     SecEntrada:AddButton({
-        Title    = "✅ Confirmar Senha",
+        Title    = "Confirmar Senha",
         Callback = function()
             if inputKey == "" then Notify("Digite uma senha primeiro", 3, Color3.fromRGB(255,150,80)); return end
             local savedLinkData = dataManager:load("Link.json")
@@ -284,13 +301,13 @@ return function(config)
             end
             if validateKey(inputKey, savedLinkData.link) then
                 dataManager:save("Key.json", { key = inputKey, time = tick() })
-                Notify("✅ Acesso liberado!", 3, Color3.fromRGB(80,255,150))
+                Notify("Acesso liberado!", 3, Color3.fromRGB(80,255,150))
                 task.spawn(function() sendAnalytics("key") end)
                 task.wait(1.5)
                 pcall(function() BastardXHub:Destroy() end)
                 loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
             else
-                Notify("❌ Senha incorreta. Tente novamente.", 4, Color3.fromRGB(255,80,80))
+                Notify("Senha incorreta. Tente novamente.", 4, Color3.fromRGB(255,80,80))
             end
         end,
     })
@@ -298,12 +315,12 @@ return function(config)
 --// =========================================
 --//   ABA PREMIUM
 --// =========================================
-    local TabPremium = Window:AddTab({ Name = "⭐ Premium", Icon = "rbxassetid://127843403295538" })
+    local TabPremium = Window:AddTab({ Name = "Premium", Icon = "rbxassetid://127843403295538" })
     local SecPremium = TabPremium:AddSection("Acesso Permanente IronTech", true)
 
     SecPremium:AddParagraph({
-        Title   = "Benefícios do Premium",
-        Content = "✅ Acesso PERMANENTE e ILIMITADO\n✅ Sem encurtadores ou links\n✅ Senha que nunca expira\n✅ Suporte VIP no Discord\n✅ Acesso antecipado a novos scripts",
+        Title   = "Beneficios do Premium",
+        Content = "Acesso PERMANENTE e ILIMITADO\nSem encurtadores ou links\nSenha que nunca expira\nSuporte VIP no Discord\nAcesso antecipado a novos scripts",
     })
 
     local premiumInput = ""
@@ -313,7 +330,7 @@ return function(config)
     })
 
     SecPremium:AddButton({
-        Title    = "🔓 Ativar Premium",
+        Title    = "Ativar Premium",
         Callback = function()
             if premiumInput == "" then Notify("Digite sua chave Premium", 3, Color3.fromRGB(255,150,80)); return end
             local valid = false
@@ -324,22 +341,22 @@ return function(config)
             end
             if valid then
                 dataManager:save("Premium.json", { key = premiumInput })
-                Notify("⭐ Premium ativado com sucesso!", 4, Color3.fromRGB(120,0,240))
+                Notify("Premium ativado com sucesso!", 4, Color3.fromRGB(120,0,240))
                 task.spawn(function() sendAnalytics("premium") end)
                 task.wait(1.5)
                 pcall(function() BastardXHub:Destroy() end)
                 loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
             else
-                Notify("❌ Chave Premium inválida.", 4, Color3.fromRGB(255,80,80))
+                Notify("Chave Premium invalida.", 4, Color3.fromRGB(255,80,80))
             end
         end,
     })
 
     SecPremium:AddButton({
-        Title    = "💬 Comprar no Discord",
+        Title    = "Comprar no Discord",
         Callback = function()
             setclipboard(INTERNAL_CONFIG.DiscordComprar)
-            Notify("Link copiado! Entre no Discord e vá ao canal de compras.", 5, Color3.fromRGB(114,137,218))
+            Notify("Link copiado! Entre no Discord e va ao canal de compras.", 5, Color3.fromRGB(114,137,218))
         end,
     })
 
@@ -364,7 +381,7 @@ return function(config)
         Callback = function(col) Window:SetAccentColor(col) end,
     })
     SecTheme:AddSlider({
-        Title = "Transparência", Min = 0, Max = 95, Default = 0, Increment = 1,
+        Title = "Transparencia", Min = 0, Max = 95, Default = 0, Increment = 1,
         Callback = function(v) Window:SetTransparency(v/100) end,
     })
 
