@@ -1,3 +1,30 @@
+_G.ANTIENVLOGBYNEVERWON1 = 1
+getgenv().ANTIENVLOGBYNEVERWON2 = 1
+getgenv().ANTIENVLOGBYNEVERWON3 = 69
+_G.ifucantseeanyprintthenufailedtobypassthisenvlogger = true
+_G.ANTIENVLOGGERmadebyclickdetectoronneverwon = true
+
+local a = getgenv().ANTIENVLOGBYNEVERWON2 + _G.ANTIENVLOGBYNEVERWON1
+
+if _G.ANTIENVLOGBYNEVERWON1 and getgenv().ANTIENVLOGBYNEVERWON2 and _G.ANTIENVLOGBYNEVERWON1 == 1 and getgenv().ANTIENVLOGBYNEVERWON2 == 1 then
+    if a and a ~= 1 or a ~= 3 then
+        a = a + a
+        if a and a ~= a and a == 4 then
+        elseif a == a and a ~= 3 then        
+
+            task.spawn(function()
+                while true do
+                    local b = math.random(1, 1000000)
+                    getgenv().ANTIENVLOGBYNEVERWON3 = b + 1
+                    getgenv().ANTIENVLOGBYNEVERWON2 = getgenv().ANTIENVLOGBYNEVERWON2 + 1
+                    _G.ANTIENVLOGBYNEVERWON1 = _G.ANTIENVLOGBYNEVERWON1 + 1
+                    task.wait(math.random() / 10)
+                end
+            end)
+
+        end
+    end
+end
 --// =========================================
 --//   IronTech System v2.1
 --//   github.com/alphacellsmart/irontech-hub
