@@ -41,19 +41,17 @@ return function(config)
     local LIB_CONFIG_URL = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Lib/Config.json"
     local LIB_SRC_URL    = "https://irontech-system.vercel.app/api/load"
     local ANALYTICS_URL  = "https://irontech-system.vercel.app/api/analytics"
-    local SECRET_TOKEN   = "IRNTCH_SEC_7x9kQmZ2pL4nR8wY"
+    local SECRET_TOKEN   = "IRNTCH_SEC_Fc5LcY7kir3uWGg9"
 
 --// =========================================
 --//   CONFIG INTERNA
 --// =========================================
     local INTERNAL_CONFIG = {
         Links = {
-            ["https://suaads.com/wxtj1e"]    = "KEY-CYRS-K45P-YU98-78AB",
-            ["https://suaads.com/gcefwl"]    = "KEY-CYRS-RTV4-4D4R-GGK3",
-            ["https://suaads.com/ifw7t0"]    = "KEY-CYRS-VYHT-VSWV-Y7L0",
-            ["https://suaurl.com/j0th05"]    = "KEY-CYRS-ENK5-HOAS-GRYC",
-            ["https://shortmine.com/5bp0w2"] = "KEY-CYRS-AODV-YWI1-CKSM",
-            ["https://mineurl.com/g9fw43"]   = "KEY-CYRS-HOX7-WO6Z-GHQS",
+            ["https://snet.blog/a9ugv9"] = "KEY-CYRS-FI1G-583A-1VWG",
+            ["https://snet.blog/o7n3v7"] = "KEY-CYRS-126Z-0EYX-MKXL",
+            ["https://snet.blog/6quj30"] = "KEY-CYRS-IL9A-628K-6AIM",
+            ["https://snet.blog/33v7j8"] = "KEY-CYRS-MEN5-9X5J-UAKZ",
         },
         LinkExpiryTime = 43200,
         DiscordLink    = "https://discord.gg/RCkCmkTFaf",
