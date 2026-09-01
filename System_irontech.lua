@@ -3,15 +3,12 @@ getgenv().ANTIENVLOGBYNEVERWON2 = 1
 getgenv().ANTIENVLOGBYNEVERWON3 = 69
 _G.ifucantseeanyprintthenufailedtobypassthisenvlogger = true
 _G.ANTIENVLOGGERmadebyclickdetectoronneverwon = true
-
 local a = getgenv().ANTIENVLOGBYNEVERWON2 + _G.ANTIENVLOGBYNEVERWON1
-
 if _G.ANTIENVLOGBYNEVERWON1 and getgenv().ANTIENVLOGBYNEVERWON2 and _G.ANTIENVLOGBYNEVERWON1 == 1 and getgenv().ANTIENVLOGBYNEVERWON2 == 1 then
     if a and a ~= 1 or a ~= 3 then
         a = a + a
         if a and a ~= a and a == 4 then
         elseif a == a and a ~= 3 then        
-
             task.spawn(function()
                 while true do
                     local b = math.random(1, 1000000)
@@ -21,7 +18,6 @@ if _G.ANTIENVLOGBYNEVERWON1 and getgenv().ANTIENVLOGBYNEVERWON2 and _G.ANTIENVLO
                     task.wait(math.random() / 10)
                 end
             end)
-
         end
     end
 end
@@ -33,36 +29,33 @@ return function(config)
     if not config or not config.HubName or not config.Script then
         error("[IronTech] Config inválida: HubName ou Script não definido")
     end
-
     local HUB_NAME        = config.HubName
     local MAIN_SCRIPT_URL = config.Script
-
     local CONFIG_URL     = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Config.json"
     local LIB_CONFIG_URL = "https://raw.githubusercontent.com/alphacellsmart/irontech-hub/main/Lib/Config.json"
     local LIB_SRC_URL    = "https://irontech-system.vercel.app/api/load"
     local ANALYTICS_URL  = "https://irontech-system.vercel.app/api/analytics"
     local SECRET_TOKEN   = "IRNTCH_SEC_Fc5LcY7kir3uWGg9"
-
 --// =========================================
 --//   CONFIG INTERNA
 --// =========================================
     local INTERNAL_CONFIG = {
         Links = {
-            ["https://snet.blog/a9ugv9"] = "KEY-CYRS-FI1G-583A-1VWG",
-            ["https://snet.blog/o7n3v7"] = "KEY-CYRS-126Z-0EYX-MKXL",
-            ["https://snet.blog/6quj30"] = "KEY-CYRS-IL9A-628K-6AIM",
-            ["https://snet.blog/33v7j8"] = "KEY-CYRS-MEN5-9X5J-UAKZ",
+            -- [[ 5 PARES DE ACESSO — ATUALIZADO ]]
+            ["https://shrtslug.biz/94PRt"] = "KEY-ALFA-7X-2-B-Z9M4Q",
+            ["https://shrtslug.biz/94PRz"] = "KEY-BETA-3Y-5-C-X7K2V",
+            ["https://shrtslug.biz/94PRH"] = "KEY-GAMA-9Z-8-D-L3P5W",
+            ["https://shrtslug.biz/94PRM"] = "KEY-DELTA-4W-1-E-M8R7T",
+            ["https://shrtslug.biz/94PRP"] = "KEY-OMEGA-6V-3-F-N2S9Y",
         },
         LinkExpiryTime = 43200,
         DiscordLink    = "https://discord.gg/RCkCmkTFaf",
         DiscordComprar = "https://discord.com/channels/1481726997452296326/1482141134938702069",
     }
-
 --// =========================================
     local HttpService = game:GetService("HttpService")
     local Players     = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
-
 --// =========================================
 --//   HELPERS
 --// =========================================
@@ -77,14 +70,12 @@ return function(config)
         end
         return "Unknown"
     end
-
     local function getGameName()
         local ok, name = pcall(function()
             return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
         end)
         return (ok and name) or "Unknown"
     end
-
     local function getCountry()
         local ok, locale = pcall(function() return LocalPlayer.LocaleId or "" end)
         if ok and locale and locale ~= "" then
@@ -104,7 +95,6 @@ return function(config)
         end
         return "Desconhecido"
     end
-
     local function buildTeleportScript()
         local ok, result = pcall(function()
             return string.format(
@@ -121,7 +111,6 @@ return function(config)
         end)
         return ok and result or ""
     end
-
 --// =========================================
 --//   ANALYTICS v2.1 — token secreto + request() compativel
 --// =========================================
@@ -159,7 +148,6 @@ return function(config)
             end
         end)
     end
-
 --// =========================================
     local function fetchJSON(url)
         local ok, raw = pcall(function() return game:HttpGet(url, true) end)
@@ -167,26 +155,22 @@ return function(config)
         local dok, data = pcall(function() return HttpService:JSONDecode(raw) end)
         return dok and data or nil
     end
-
     local externalConfig = fetchJSON(CONFIG_URL)
     if not externalConfig then
         warn("[IronTech] Falha ao carregar Config.json")
         return
     end
-
     if not externalConfig.KernelEnabled then
         task.spawn(function() sendAnalytics("free") end)
         loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
         return
     end
-
 --// =========================================
 --//   GERENCIADOR DE DADOS LOCAL
 --// =========================================
     local FOLDER_NAME = "IronTech_" .. HUB_NAME:gsub("%s+", "_")
     local DataManager = {}
     DataManager.__index = DataManager
-
     function DataManager.new()
         local self = setmetatable({}, DataManager)
         if not isfolder(FOLDER_NAME) then makefolder(FOLDER_NAME) end
@@ -201,9 +185,7 @@ return function(config)
         local ok, r = pcall(function() return HttpService:JSONDecode(readfile(fp)) end)
         return ok and r or nil
     end
-
     local dataManager = DataManager.new()
-
 --// =========================================
 --//   VALIDAÇÃO
 --// =========================================
@@ -230,13 +212,11 @@ return function(config)
         end
         return false
     end
-
     if isPremium() then
         task.spawn(function() sendAnalytics("premium") end)
         loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
         return
     end
-
     local savedLink = dataManager:load("Link.json")
     local savedKey  = dataManager:load("Key.json")
     if savedLink and savedKey and isLinkValid() then
@@ -246,7 +226,6 @@ return function(config)
             return
         end
     end
-
 --// =========================================
 --//   CARREGA LIB CONFIG
 --// =========================================
@@ -254,19 +233,16 @@ return function(config)
     local CFG_THEME = libCfg["ThemeSelect"] or "darker"
     local CFG_SND   = libCfg["SoundId"]     or ""
     local CFG_VOL   = libCfg["SoundVolume"] or 1
-
 --// =========================================
 --//   CARREGA UI
 --// =========================================
     local BastardXHub = loadstring(game:HttpGet(LIB_SRC_URL))()
-
     local function Notify(content, delay, color)
         return BastardXHub:MakeNotify({
             Title = "IronTech", Content = content or "",
             Color = color or Color3.fromRGB(120,0,240), Delay = delay or 4,
         })
     end
-
     local gameName = getGameName()
     local Window = BastardXHub:Window({
         Title       = HUB_NAME..(gameName ~= "" and (" | "..gameName) or "").." | "..getExecutorName(),
@@ -274,7 +250,6 @@ return function(config)
         Version     = 1,
         ThemePreset = CFG_THEME,
     })
-
     if CFG_SND ~= "" then
         task.spawn(function()
             local s = Instance.new("Sound")
@@ -286,17 +261,14 @@ return function(config)
             game:GetService("Debris"):AddItem(s, 15)
         end)
     end
-
     task.delay(0.5, function()
         Notify("Sistema IronTech ativo! Verifique sua chave.", 5, Color3.fromRGB(120,0,240))
     end)
-
 --// =========================================
 --//   ABA VERIFICAR
 --// =========================================
     local TabVerificar = Window:AddTab({ Name = "Verificar", Icon = "rbxassetid://7733965118" })
     local SecEntrada   = TabVerificar:AddSection("Pegue uma senha para continuar", true)
-
     SecEntrada:AddButton({
         Title    = "Gerar Link (Clique Aqui)",
         Callback = function()
@@ -309,13 +281,11 @@ return function(config)
             Notify("Link copiado! Cole no navegador e complete para obter a senha.", 6, Color3.fromRGB(255,200,0))
         end,
     })
-
     local inputKey = ""
     SecEntrada:AddInput({
         Title = "Digite a senha:", Content = "Senha de Acesso", Default = "",
         Callback = function(value) inputKey = value end,
     })
-
     SecEntrada:AddButton({
         Title    = "Confirmar Senha",
         Callback = function()
@@ -336,24 +306,20 @@ return function(config)
             end
         end,
     })
-
 --// =========================================
 --//   ABA PREMIUM
 --// =========================================
     local TabPremium = Window:AddTab({ Name = "Premium", Icon = "rbxassetid://127843403295538" })
     local SecPremium = TabPremium:AddSection("Acesso Permanente IronTech", true)
-
     SecPremium:AddParagraph({
         Title   = "Beneficios do Premium",
         Content = "Acesso PERMANENTE e ILIMITADO\nSem encurtadores ou links\nSenha que nunca expira\nSuporte VIP no Discord\nAcesso antecipado a novos scripts",
     })
-
     local premiumInput = ""
     SecPremium:AddInput({
         Title = "Chave Premium:", Content = "Cole sua chave aqui", Default = "",
         Callback = function(value) premiumInput = value end,
     })
-
     SecPremium:AddButton({
         Title    = "Ativar Premium",
         Callback = function()
@@ -376,7 +342,6 @@ return function(config)
             end
         end,
     })
-
     SecPremium:AddButton({
         Title    = "Comprar no Discord",
         Callback = function()
@@ -384,19 +349,16 @@ return function(config)
             Notify("Link copiado! Entre no Discord e va ao canal de compras.", 5, Color3.fromRGB(114,137,218))
         end,
     })
-
 --// =========================================
 --//   ABA CONFIG
 --// =========================================
     local TabConfig  = Window:AddTab({ Name = "Config", Icon = "settings" })
     local SecTheme   = TabConfig:AddSection("Visual da Interface", true)
-
     local _themeList = libCfg["_themes_available"] or {
         "darker","dark","carbon","obsidian","midnight","navy","ocean","teal","slate",
         "grape","rose","crimson","bronze","forest","ash","void","aurora","ember",
         "lilac","storm","rust","pine"
     }
-
     SecTheme:AddDropdown({
         Title = "Tema", Options = _themeList, Default = CFG_THEME, Multi = false,
         Callback = function(v) Window:SetTheme(v) end,
@@ -409,7 +371,6 @@ return function(config)
         Title = "Transparencia", Min = 0, Max = 95, Default = 0, Increment = 1,
         Callback = function(v) Window:SetTransparency(v/100) end,
     })
-
     local SecKeys = TabConfig:AddSection("Atalhos", true)
     SecKeys:AddKeybind({
         Title = "Toggle UI", Default = Enum.KeyCode.X,
