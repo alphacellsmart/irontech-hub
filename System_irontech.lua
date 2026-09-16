@@ -235,18 +235,17 @@ return function(config)
     end
     local savedLink = dataManager:load("Link.json")
     local savedKey  = dataManager:load("Key.json")
-    -- Se já validou senha antes e ela ainda é uma das senhas oficiais, entra direto.
-    if savedKey and isKnownKey(savedKey.key) then
+    -- Sessão grátis dura LinkExpiryTime (12h). Depois precisa passar no encurtador de novo.
+    -- Premium continua vitalício (isPremium acima).
+    local function isKeySessionValid()
+        if not savedKey or not savedKey.key or not savedKey.time then return false end
+        if not isKnownKey(savedKey.key) then return false end
+        return (now() - savedKey.time) <= INTERNAL_CONFIG.LinkExpiryTime
+    end
+    if isKeySessionValid() then
         task.spawn(function() sendAnalytics("key") end)
         loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
         return
-    end
-    if savedLink and savedKey and isLinkValid() then
-        if validateKey(savedKey.key, savedLink.link) then
-            task.spawn(function() sendAnalytics("key") end)
-            loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
-            return
-        end
     end
 --// =========================================
 --//   CARREGA LIB CONFIG
