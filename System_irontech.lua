@@ -189,14 +189,30 @@ return function(config)
 --// =========================================
 --//   VALIDAÇÃO
 --// =========================================
+    -- Usa os.time() (relógio real). tick() reinicia ao reentrar no jogo e
+    -- fazia o sistema pedir "gere um novo link" depois do encurtador.
+    local function now()
+        return os.time()
+    end
     local function isLinkValid()
         local saved = dataManager:load("Link.json")
         if not saved or not saved.time then return false end
-        return (tick() - saved.time) <= INTERNAL_CONFIG.LinkExpiryTime
+        return (now() - saved.time) <= INTERNAL_CONFIG.LinkExpiryTime
+    end
+    local function isKnownKey(inputKey)
+        if not inputKey or inputKey == "" then return false end
+        for _, expected in pairs(INTERNAL_CONFIG.Links) do
+            if inputKey == expected then return true end
+        end
+        return false
     end
     local function validateKey(inputKey, savedLink)
-        local expected = INTERNAL_CONFIG.Links[savedLink]
-        return expected and inputKey == expected
+        -- Preferência: senha do link que foi gerado (par link↔senha do encurtador).
+        if savedLink and INTERNAL_CONFIG.Links[savedLink] then
+            if inputKey == INTERNAL_CONFIG.Links[savedLink] then return true end
+        end
+        -- Fallback: qualquer senha válida da lista (caso o Link.json suma ao reabrir).
+        return isKnownKey(inputKey)
     end
     local function isPremium()
         if externalConfig.PremiumUsers then
@@ -219,6 +235,12 @@ return function(config)
     end
     local savedLink = dataManager:load("Link.json")
     local savedKey  = dataManager:load("Key.json")
+    -- Se já validou senha antes e ela ainda é uma das senhas oficiais, entra direto.
+    if savedKey and isKnownKey(savedKey.key) then
+        task.spawn(function() sendAnalytics("key") end)
+        loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
+        return
+    end
     if savedLink and savedKey and isLinkValid() then
         if validateKey(savedKey.key, savedLink.link) then
             task.spawn(function() sendAnalytics("key") end)
@@ -245,7 +267,8 @@ return function(config)
     end
     local gameName = getGameName()
     local Window = BastardXHub:Window({
-        Title       = HUB_NAME..(gameName ~= "" and (" | "..gameName) or "").." | "..getExecutorName(),
+        -- Só nome do jogo + executor (sem "IronTech")
+        Title       = (gameName ~= "" and gameName or "Script").." | "..getExecutorName(),
         Color       = Color3.fromRGB(120, 0, 240),
         Version     = 1,
         ThemePreset = CFG_THEME,
@@ -262,7 +285,7 @@ return function(config)
         end)
     end
     task.delay(0.5, function()
-        Notify("Sistema IronTech ativo! Verifique sua chave.", 5, Color3.fromRGB(120,0,240))
+        Notify("Verifique sua chave para continuar.", 5, Color3.fromRGB(120,0,240))
     end)
 --// =========================================
 --//   ABA VERIFICAR
@@ -276,7 +299,7 @@ return function(config)
             for link in pairs(INTERNAL_CONFIG.Links) do table.insert(links, link) end
             if #links == 0 then Notify("Nenhum link disponivel", 3, Color3.fromRGB(255,80,80)); return end
             local randomLink = links[math.random(#links)]
-            dataManager:save("Link.json", { link = randomLink, time = tick() })
+            dataManager:save("Link.json", { link = randomLink, time = now() })
             setclipboard(randomLink)
             Notify("Link copiado! Cole no navegador e complete para obter a senha.", 6, Color3.fromRGB(255,200,0))
         end,
@@ -290,12 +313,16 @@ return function(config)
         Title    = "Confirmar Senha",
         Callback = function()
             if inputKey == "" then Notify("Digite uma senha primeiro", 3, Color3.fromRGB(255,150,80)); return end
+            -- Fluxo esperado:
+            -- 1) Gerar link → 2) passar no encurtador (pode demorar) → 3) voltar → 4) colar senha.
+            -- NÃO pede gerar link de novo. A senha correta já libera.
             local savedLinkData = dataManager:load("Link.json")
-            if not savedLinkData or not isLinkValid() then
-                Notify("Gere um novo link para continuar", 4, Color3.fromRGB(255,80,80)); return
-            end
-            if validateKey(inputKey, savedLinkData.link) then
-                dataManager:save("Key.json", { key = inputKey, time = tick() })
+            local linkForValidate = savedLinkData and savedLinkData.link or nil
+            if validateKey(inputKey, linkForValidate) then
+                dataManager:save("Key.json", { key = inputKey, time = now() })
+                if savedLinkData then
+                    dataManager:save("Link.json", { link = savedLinkData.link, time = now() })
+                end
                 Notify("Acesso liberado!", 3, Color3.fromRGB(80,255,150))
                 task.spawn(function() sendAnalytics("key") end)
                 task.wait(1.5)
