@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://rawscripts.net/raw/S15-+1-Speed-Keyboard-Escape-or-Candy-and-Chocolate-ARASAKA-HUB-NO-KEY-AUTO-FARM-229088"))()
